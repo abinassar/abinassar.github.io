@@ -1,0 +1,23 @@
+Anotaciones de organización de contenido
+
+1. Cada nueva seccion debe estar agrupada en una etiqueta <section>.
+2. Los items contenidos dentro de cada seccion deben estar dentro de un <div>.
+3. La seccion que contiene el contenido principal debe estar almacenada en una etiqueta <main>.
+
+Anotaciones sobre Inline-block
+
+1.Los enlaces y las imagenes son elementos inline, con lo cual no se le puede dar ancho, altos, etc.
+2. Para convertir un elemento a bloque usamos la propiedad CSS Display: Block,
+con esto el elemnto tomara todo el ancho disponible.
+3. Para que el elemento conserve las propiedades que les asignamos podemos usar
+display: inline-block.
+
+!important:
+
+Ignora la caracteristica CSS que haya sido aplicada anteriormente y la sobreescribe. Es muy util cuando
+se usa como utilidad en una parte superior de la hoja, de manera que así exista en un estilo inferior
+a él se preste atención a ese estilo.
+
+Flexbox:
+
+1. Solamente afecta a los elementos hijos (div internos), tanto flex como grid.
