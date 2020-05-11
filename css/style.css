@@ -28,7 +28,7 @@ body {
 }
 
 .contenedor {
-    max-width: 100rem;
+    max-width: 120rem;
     margin: 0 auto;
 }
 
@@ -335,4 +335,22 @@ h4 {
     font-size: 2rem;
     margin: 0;
     padding: 1rem 0;
+}
+
+.iconos-caracteristicas {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-evenly;
+    flex: 1;
+    max-width: 500px;
+}
+
+.iconos-caracteristicas li {
+    /* flex: 1; */
+    display: flex;
+}
+
+.iconos-caracteristicas li img {
+    margin-right: 2rem;
 }
