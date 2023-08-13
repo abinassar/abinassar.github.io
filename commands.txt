@@ -1,4 +1,0 @@
-Comando para correr proyecto backend:
-
-flask --app .\server.py run 
-

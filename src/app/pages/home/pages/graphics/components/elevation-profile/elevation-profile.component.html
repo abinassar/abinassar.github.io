@@ -1,0 +1,196 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/graphics"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfil de Elevación</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-card>
+    <img src="../../../../../../../assets/images/telecom-towers.png" />
+    <ion-card-header>
+      <ion-card-subtitle>Perfil de elevación</ion-card-subtitle>
+      <ion-card-title>Enlaces de microondas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Un perfil de elevaciones es una herramienta utilizada para diferenciar alturas, 
+      porcentajes de pendientes, medir segmentos de una ruta, una montaña, la cuenca de un río, etc.
+    </ion-card-content>
+  </ion-card>
+
+  <button (click)="showObs()">
+    show obstructions
+  </button>
+  
+  <ion-row class="cellphone-width justify-content-center align-items-center"
+           *ngIf="showMap">
+    <ion-col>
+      <app-global-map class="map-container"
+                      (showFullScreenMap)="showFullScreenMap()"
+                      [P1]="P1"
+                      [P2]="P2"
+                      [insideComponent]="true"></app-global-map>
+    </ion-col>
+  </ion-row>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Puntos seleccionados:</ion-card-title>
+    </ion-card-header>
+    <ion-grid>
+  
+      <ion-row class="ion-padding pt-0px">
+        <ion-col>
+          <h3>
+            <ion-badge slot="start">Punto N°1:</ion-badge>
+            
+            <span>
+              Latitud: {{settingsService.linkSettings.P1.lat}} - Longitud: {{settingsService.linkSettings.P1.lng}}
+            </span>
+          </h3>
+        </ion-col>
+        <ion-col>
+          <h3>
+            <ion-badge slot="start">Punto N°2:</ion-badge>
+            <span>
+              Latitud: {{settingsService.linkSettings.P2.lat}} - Longitud: {{settingsService.linkSettings.P2.lng}}
+            </span>
+          </h3>
+        </ion-col>
+      </ion-row>
+
+    
+      <ion-row class="ph-10px">
+        <h3>
+          Altura de antenas
+        </h3>
+      </ion-row>
+  
+      <ion-row class="ph-10px"
+               [formGroup]="settingsForm"
+               *ngIf="showForm">
+        <ion-col>
+          <h6>
+            Altura Antena Initial
+          </h6>
+          <ion-item>
+            <ion-input fill="outline"
+                       label="Altura antena inicial"
+                       labelPlacement="floating" 
+                       placeholder="Ingresa Altura" 
+                       type="number"
+                       formControlName="antennaInitialHeight"></ion-input>
+              <h4 class="ml-10px">
+                mts
+              </h4>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <h6>
+            Altura Antena Final
+          </h6>
+          <ion-item>
+            <ion-input fill="outline"
+                       label="Altura antena final"
+                       labelPlacement="floating" 
+                       placeholder="Ingresa Altura" 
+                       type="number"
+                       formControlName="antennaFinalHeight"></ion-input>
+              <h4 class="ml-10px">
+                mts
+              </h4>
+          </ion-item>
+        </ion-col>
+  
+      </ion-row>
+
+    </ion-grid>
+  </ion-card>
+
+  <ion-button (click)="generateElevationGraph()">
+    Generar Gráfica
+  </ion-button>
+
+  <ion-card class="ion-padding">
+
+    <ng-container *ngIf="elevationGraph; else noElevationGraphic"
+                  class="graph-container">
+      
+      <plotly-plot [data]="elevationData.data" 
+                   [layout]="elevationData.layout" 
+                   [useResizeHandler]="true"
+                   [style]="{position: 'relative', width: '100%', height: '100%'}">
+      </plotly-plot>
+
+    </ng-container>
+    <ng-template #noElevationGraphic>
+
+      <ion-card-subtitle>Generar gráfica</ion-card-subtitle>
+      <ion-card-title>Procedimiento:</ion-card-title>
+
+      <ion-card-content>
+        <ul>
+          <li>
+            <p class="fs-20">
+              1.- Selecciona los dos puntos en el mapa donde quieres graficar el
+              perfil de elevación.
+            </p>
+          </li>
+          <li>
+            <p class="fs-20">
+              2.- Seleccionados los puntos, presiona el botón "Generar gráfica"
+              para obtener mostrar el gráfico.
+            </p>
+          </li>
+        </ul>
+      </ion-card-content>      
+    </ng-template>
+
+  </ion-card>
+
+  <ion-card *ngIf="elevationGraph
+                   && obstructionFieldPoints.length > 0">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-badge color="warning">IMPORTANTE</ion-badge>
+        Puntos de obstrucción: 
+      </ion-card-title>
+      <ion-card-subtitle>
+        Es importante que revises la configuracion del enlace, ya que existen puntos de obstruccion en 
+        el 60% de la primera zona de fresnel, por lo que esta afectada la factilidad del radienlace.
+        
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-grid>
+  
+      <ion-row class="ion-padding pt-0px"
+               *ngFor="let obstructionPoint of obstructionFieldPoints; let i=index">
+        <ion-col>
+          <h3>
+            <ion-badge slot="start">N°{{i + 1}}:</ion-badge>
+            <span>
+              Distancia: {{obstructionPoint.distance / 1000 | truncate: 7}} Km (aprox.) ; Lat: {{obstructionPoint.lat | truncate: 10}} - Lng: {{obstructionPoint.lng | truncate: 10}}
+            </span>
+          </h3>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+</ion-content>
+
+<ion-fab slot="fixed" 
+          vertical="bottom" 
+          horizontal="end">
+  <ion-fab-button>
+    <ion-icon name="settings-outline"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button (click)="saveLinkSettings()">
+      <ion-icon name="refresh"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
